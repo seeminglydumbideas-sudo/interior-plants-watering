@@ -1,0 +1,9 @@
+{
+    "files.exclude": {
+        // hide generate files in explorer view. there was many
+        // files which make navigation painfull.
+        "**/*.swp": true
+    },
+    "editor.wordWrap": "on",
+    "editor.rulers": [80, 120]
+}
