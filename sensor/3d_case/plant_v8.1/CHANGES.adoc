@@ -1,0 +1,10 @@
+== Plant Sensor V8.1 
+
+* sensor.scad
+** moved esp32 3mm down to make the whole smaller
+** moved antenna only 2mm down since place due to cable
+* holes.scad
+** adapt for esp32 new position
+* main.scad
+** many to adapt to smaller volume
+

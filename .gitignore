@@ -1,0 +1,5 @@
+.vscode/c_cpp_properties.json
+Secrets.cpp
+Secrets.cpp
+*.swp
+build/

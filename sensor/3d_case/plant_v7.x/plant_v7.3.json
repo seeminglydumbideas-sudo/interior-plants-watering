@@ -1,0 +1,47 @@
+{
+    "parameterSets": {
+        "large battery": {
+            "$fn": "100",
+            "_batLg": "63",
+            "_edge_depth": "3.5",
+            "_edge_width": "0.7",
+            "_vol_inc": "0"
+        },
+        "small battery": {
+            "$fn": "100",
+            "_batLg": "38",
+            "_edge_depth": "3.5",
+            "_edge_width": "0.7",
+            "_vol_inc": "0"
+        },
+        "fat": {
+            "$fn": "100",
+            "_batLg": "38",
+            "_edge_depth": "4",
+            "_edge_width": "1.3",
+            "_vol_inc": "2"
+        },
+        "thin": {
+            "$fn": "100",
+            "_batLg": "38",
+            "_edge_depth": "2",
+            "_edge_width": "0.4",
+            "_vol_inc": "-1"
+        },
+        "7.3 - avoid thin walls": {
+            "$fn": "100",
+            "_batLg": "38",
+            "_edge_depth": "3.5",
+            "_edge_width": "1",
+            "_left": "false",
+            "_model": "false",
+            "_opening": "7",
+            "_print": "true",
+            "_right": "false",
+            "_vol_inc": "0.5"
+        }
+    },
+    "fileFormatVersion": "1",
+    "parameterSets": "",
+    "parameterSets": ""
+}

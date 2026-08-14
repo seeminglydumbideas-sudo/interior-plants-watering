@@ -1,0 +1,10 @@
+{
+    "parameterSets": {
+        "design default values": {
+            "$fa": "1",
+            "$fs": "1.5",
+            "meme": "2"
+        }
+    },
+    "fileFormatVersion": "1"
+}

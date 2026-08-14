@@ -1,0 +1,38 @@
+= AI Pre-Commit Review Report: Interior Plants Watering
+:date: 2026-08-14
+:author: Antigravity AI
+:toc:
+
+== 1. Privacy, Security & Secrets (AGENTS.md Checklist)
+=== 1.1 Hardcoded Secrets
+* [PASS] No hardcoded passwords, SSIDs, or API tokens were found leaked in the repository.
+* [PASS] `Secrets.h` is used properly for definitions, while `Secrets.cpp` is kept out of source control.
+* [NOTE] In `.gitignore`, `Secrets.cpp` is listed twice (lines 2 and 3). This is harmless but could be cleaned up.
+
+=== 1.2 PII & Absolute Paths
+* [PASS] No absolute local paths (`/home/user/...`), usernames, or IP leaks were detected in the source code or scripts.
+
+=== 1.3 Media Metadata (EXIF)
+* [WARNING] Several `.jpg` and `.png` files in the `images/` and `sensor/3d_case/` directories still contain residual EXIF metadata (e.g., `Modify Date`, `Pixels Per Unit`, `Image Size`).
+  * **Recommendation:** Run `find . -type f -name "*.png" -o -name "*.jpg" | xargs exiftool -all=` from the root directory before committing to adhere strictly to the Open Source Checklist.
+
+== 2. Code Architecture & Power Management (`sensor-firmware`)
+=== 2.1 Deep Sleep Implementation
+* [PASS] `PowerManager.cpp` correctly implements deep sleep using `esp_deep_sleep_start()`.
+* [PASS] The system appropriately uses `RTC_DATA_ATTR` for variables like `bootCount` and `totalElapsedSec` to survive deep sleep cycles and reset only on cold power cycles.
+
+=== 2.2 Non-Blocking Architecture
+* [PASS] `sensor-firmware.ino` avoids blocking `delay()` loops for its core state machine, cleanly separating logic across `power.loop()`, `moisture.loop()`, `bluetooth.loop()`, and `sensor.loop()`.
+* [PASS] The broadcast window relies on `millis()` tracking (`millis() - _dataReadyAt < BROADCAST_WINDOW_MS`) before entering deep sleep, ensuring BLE packets have time to transmit.
+
+=== 2.3 Hardware Interfaces
+* [PASS] Voltage readings correctly take attenuation and multi-sampling into account in `PowerManager::getLevel()`.
+
+== 3. Documentation
+* [PASS] `README.adoc` provides excellent, comprehensive overviews of both the Sensor ("Nodes") and the Server ("Base Station") components.
+* [PASS] The documentation accurately reflects the current state of development (Summer 2026, pumps disabled, Prometheus/Grafana focus).
+
+== Summary & Recommendations
+The `interior-plants-watering` sensor implementation is very clean, utilizing proper low-power design patterns for the ESP32-C3. 
+
+**Action Item Before Commit:** Scrub the remaining EXIF data from the image directories.

@@ -1,0 +1,3 @@
+== Plant Sensor V8.2
+
+* fix pin hole button access (only boot button was accessible in 8.1)

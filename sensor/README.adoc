@@ -1,0 +1,89 @@
+= plant-sensor-esp32
+
+A low-power Bluetooth Low Energy (BLE) soil moisture sensor node built for the *Seeed Studio XIAO ESP32-C3*.
+
+== Overview
+
+`plant-sensor-esp32` periodically measures soil moisture levels, monitors battery voltage and power source, and broadcasts telemetry over BLE manufacturer advertisements. Designed for battery-powered deployment, the device spends most of its life in ESP32 deep sleep, waking up to sample sensors and advertise data to central receiver nodes (such as the Plant Server).
+
+IMPORTANT: Sensors are designed to be used with a dedicated base station (not used directly with phones). See the link:../README.adoc[main project README] for details.
+
+=== Hardware Components
+
+* *Microcontroller:* Seeed Studio XIAO ESP32-C3 (RISC-V single-core @ 160MHz, 2.4GHz Wi-Fi & BLE 5.0)
+* *Soil Moisture Sensor:* Capacitive Soil Moisture Sensor v1.2
+* *Power Monitoring:* Voltage divider (2x 220kΩ resistors) connected to ADC pin `D2` / `A2`
+* *Power Supply:* 3.7V LiPo / Li-Ion battery or USB-C (5V)
+
+== Key Features
+
+* *BLE Telemetry Broadcast:* Broadcasts sensor telemetry without requiring active connections. Scan response manufacturer data payload includes:
+** Moisture percentage (`0–100%`, or uncalibrated indicator `0xFF`)
+** Raw ADC reading, `rawMin`, and `rawMax` bounds
+** Battery voltage (`V`) and power source (Battery vs. USB)
+** RTC boot counter
+** Filterable by Service UUID `a1b2c3d4-0001-4c9a-8f2e-5a7b9e3d6f80`
+* *Capacitive Moisture Sampling:* Non-blocking async sampling state machine to power and sample the sensor safely. Automatically tracks calibration bounds and persists them to NVS flash (`Preferences`).
+* *Smart Power Management:* Reads battery voltage via resistor divider on ADC pin `D2`, differentiates between USB and battery power, and controls ESP32 deep sleep cycles. Features a 2-minute safety window on cold power-on to allow seamless firmware reflashing.
+* *Calibration Reset:* Press and hold the onboard *BOOT* button (GPIO 9) for 3 seconds to clear saved calibration bounds from flash memory.
+
+== Pinout & Hardware Configuration
+
+[cols="1,1,2", options="header"]
+|===
+| Component | Pin | Notes
+
+| *Moisture Sensor VCC*
+| `D0`
+| Switched output to power sensor only during sampling
+
+| *Moisture Sensor Signal*
+| `D1`
+| Analog input for moisture sensor reading
+
+| *Battery Divider ADC*
+| `D2` / `A2`
+| Resistor divider input for voltage measurement
+
+| *BOOT Button*
+| `GPIO 9`
+| Pulled HIGH internally; hold 3s to reset calibration
+|===
+
+== Calibration Procedure
+
+The sensor uses automatic bound tracking to calculate soil moisture percentages from raw ADC readings. The bounds (`rawMin` and `rawMax`) are stored in NVS flash memory (`Preferences`). It will persist resets and re-deploy.
+
+To calibrate a sensor:
+
+1. *Wake Device:* Press the *RST button* (or power-cycle the board) to ensure the ESP32 is awake and not in deep sleep mode.
+2. *Reset Calibration:* Press and hold the onboard *BOOT button (GPIO 9)* for 3 seconds. The serial output will log `[INFO] Moisture calibration reset`, clearing stored bounds (`rawMin = 4095`, `rawMax = 0`).
+3. *Set Dry Bound (0%):* Expose the capacitive probe to dry air (or insert into completely dry soil) during a sample cycle (typically 2-4 minutes). The highest ADC value measured will automatically be saved as `rawMax`.
+4. *Set Wet Bound (100%):* Submerge the probe in water up to the max fill line (or insert into fully saturated soil) during a sample cycle. The lowest ADC value measured will automatically be saved as `rawMin`.
+5. *Automatic Calculation:* Once `rawMax > rawMin + 500`, the firmware calculates moisture as:
++
+[source,cpp]
+----
+moisture % = 100 - ((100 * (rawValue - rawMin)) / (rawMax - rawMin))
+----
++
+Updated calibration bounds are saved to flash memory automatically whenever new minimums or maximums are detected.
+
+== Build & Deployment
+
+Use the provided `deploy.sh` script (located in the `bin/` directory) to compile, upload, and monitor. Make sure to run it from inside the `sensor/` directory:
+
+[source,bash]
+----
+# Compile and upload specifying the SENSOR_ID
+SENSOR_ID=13_rez_ficus ./bin/deploy.sh /dev/ttyACM0
+
+# Compile only
+SENSOR_ID=13_rez_ficus ./bin/deploy.sh --compile-only
+----
+
+The script automatically generates `Secrets.cpp` containing your specified `SENSOR_ID` and attaches to the serial monitor.
+
+== License
+
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0) - see the link:../LICENSE[LICENSE] file in the root directory for details.

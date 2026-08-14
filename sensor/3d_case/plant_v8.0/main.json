@@ -1,0 +1,30 @@
+{
+    "parameterSets": {
+        "avoid-thin-walls": {
+            "$fn": "100",
+            "_batLg": "38",
+            "_edge_depth": "2",
+            "_edge_width": "0.5",
+            "_left": "false",
+            "_model": "false",
+            "_opening": "11",
+            "_print": "true",
+            "_right": "false",
+            "_vol_inc": "1"
+        },
+        "avoid-thin-walls-2": {
+            "$fn": "100",
+            "_batLg": "38",
+            "_edge_depth": "2",
+            "_edge_width": "1",
+            "_left": "false",
+            "_model": "false",
+            "_opening": "11",
+            "_print": "true",
+            "_right": "false",
+            "_vol_inc": "2"
+        }
+    },
+    "parameterSets": "",
+    "fileFormatVersion": "1"
+}

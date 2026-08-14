@@ -1,0 +1,11 @@
+== Plant Sensor V8.0
+
+* printed at fablab 21.7.2026
+* a bit "bulky", perhaps due to the color (transparent filament)
+* once clipped (no screw), hard to take apart due to the screw part to tights.
+* plenty space for cables -> can be redude
+* sensor a little bit loose -> but differences between PCBs.
+* insert walls is hard enough (0.7mm, good) -> wall can be reduced
+* evtl. missing guides for antenna?
+
+
