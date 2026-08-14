@@ -1,0 +1,64 @@
+# Include DWARF debug info so crash-decoder can resolve addresses to file:line.
+-g
+
+# ESP32-S3 hardware: PSRAM is physically present on the LilyGo T-Display-S3.
+-DBOARD_HAS_PSRAM
+
+# USB: route Serial over USB CDC (required when CDCOnBoot=cdc in FQBN).
+-DARDUINO_USB_CDC_ON_BOOT=1
+-DARDUINO_USB_MODE=1
+
+# Platform identification expected by some libraries.
+-DESP32=1
+-DARDUINO_ARCH_ESP32=1
+
+# TFT_eSPI: suppress the default User_Setup.h lookup; use the defines below instead.
+-DUSER_SETUP_LOADED=1
+# Driver and bus mode for the ST7789 panel wired in 8-bit parallel on this board.
+-DST7789_DRIVER=1
+-DTFT_PARALLEL_8_BIT=1
+# Panel resolution.
+-DTFT_WIDTH=170
+-DTFT_HEIGHT=320
+# LilyGo T-Display-S3 parallel-bus and control pin assignments.
+-DTFT_CS=6
+-DTFT_DC=7
+-DTFT_RST=5
+-DTFT_WR=8
+-DTFT_RD=9
+-DTFT_D0=39
+-DTFT_D1=40
+-DTFT_D2=41
+-DTFT_D3=42
+-DTFT_D4=45
+-DTFT_D5=46
+-DTFT_D6=47
+-DTFT_D7=48
+# TFT_eSPI font/feature selection — include all built-in fonts and smooth-font engine.
+-DLOAD_GLCD=1
+-DLOAD_FONT2=1
+-DLOAD_FONT4=1
+-DLOAD_FONT6=1
+-DLOAD_FONT7=1
+-DLOAD_FONT8=1
+-DLOAD_GFXFF=1
+-DSMOOTH_FONT=1
+
+# loop() task stack: the default 8 KB overflows under WiFi + BLE + display.
+-DCONFIG_ARDUINO_LOOP_STACK_SIZE=32768
+
+# NimBLE scanner-only mode — disables connection infrastructure entirely.
+#
+# NIMBLE_BLE_CONNECT = ROLE_CENTRAL || ROLE_PERIPHERAL  (nimble_opt_auto.h).
+# With the default (both roles enabled), ble_hs_hci_evt_le_conn_complete() is
+# registered in the HCI event dispatch table and ble_hs_conn_init() allocates a
+# connection pool at startup.  A BLE device in the environment (e.g. a nearby phone)
+# sends a Connection Complete event; NimBLE processes it through that handler while
+# the connection pool is in an unexpected state, corrupting the os_mempool and
+# crashing with LoadProhibited inside os_mempool_init() (crash20, crash21).
+# Setting NIMBLE_BLE_CONNECT=0 removes the handler from the dispatch table and skips
+# ble_hs_conn_init() entirely — controller connection events are silently dropped.
+-DCONFIG_BT_NIMBLE_ROLE_CENTRAL_DISABLED
+-DCONFIG_BT_NIMBLE_ROLE_PERIPHERAL_DISABLED
+# We never advertise either; disabling broadcaster saves ~5 KB of flash.
+-DCONFIG_BT_NIMBLE_ROLE_BROADCASTER_DISABLED

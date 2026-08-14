@@ -1,0 +1,6 @@
+default_profile: lilygo_t_display
+profiles:
+  lilygo_t_display:
+    fqbn: esp32:esp32:lilygo_t_display_s3
+    libraries:
+      - NimBLE-Arduino (2.5.0)

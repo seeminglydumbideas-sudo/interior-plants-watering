@@ -1,0 +1,22 @@
+
+
+## run 
+
+```
+# Run form shell
+SECRET_SSID=MyWiFi SECRET_PASS=MyPassword ./deploy.sh /dev/ttyACM0
+```
+
+But you might want to map Ctrl+u to ".vscode/tasks.json" in vscode which will lod content of ~/.wifi.conf if you do not want to pass the value each time. 
+
+```
+## in keybindings of vscode
+[
+   {
+       "key": "ctrl+u",
+       "command": "workbench.action.tasks.runTask",
+       "args": "Arduino Deploy",
+       "when": "editorTextFocus"
+   }
+]
+```

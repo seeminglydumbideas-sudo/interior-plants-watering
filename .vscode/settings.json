@@ -4,6 +4,13 @@
         // files which make navigation painfull.
         "**/*.swp": true
     },
-    "editor.wordWrap": "on",
-    "editor.rulers": [80, 120]
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 80,
+    "[asciidoc]": {
+        "editor.wordWrap": "wordWrapColumn"
+    },
+    "[markdown]": {
+        "editor.wordWrap": "wordWrapColumn"
+    },
+    "editor.rulers": [80]
 }

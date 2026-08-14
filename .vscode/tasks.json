@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Arduino Deploy",
+            "type": "shell",
+            "command": "SECRET_SSID=$(grep -v '^#' ~/.wifi.conf | head -n 1 | xargs) SECRET_PASS=$(grep -v '^#' ~/.wifi.conf | head -n 2 | tail -n 1 | xargs) ./deploy.sh",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
